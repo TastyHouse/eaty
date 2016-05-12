@@ -1,0 +1,27 @@
+---
+server:
+    install: '1'
+    packages: [vim, git, npm, imagemagick]
+    timezone: Europe/Warsaw
+    locale: pl_PL.UTF-8
+vagrant_local:
+    install: '1'
+    vm: { base_box: trusty64, hostname: eaty, ip: 192.168.58.99, memory: '1024', sharedfolder: ./, useVagrantCloud: '1', syncType: nfs }
+nginx:
+    install: '1'
+    docroot: /vagrant
+    servername: eaty.tastyhouse.io.local.trunk
+mysql:
+    install: '1'
+    root_password: vagrant
+    database: vagrant
+    user: vagrant
+    password: vagrant
+    dump: ''
+php:
+    install: '1'
+    ppa: php5-5.6
+    packages: [php5-cli, php5-intl, php5-mcrypt, php5-mysql]
+composer:
+    install: '1'
+
