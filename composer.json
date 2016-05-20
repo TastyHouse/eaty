@@ -1,0 +1,26 @@
+{
+    "description": "Tasty Eaty Project",
+    "name": "tasty/eaty",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        },
+        "exclude-from-classmap": ["/features/", "/spec/"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Features\\": "features/bootstrap/Features/"
+        }
+    },
+    "require": {
+        "php": ">=5.6"
+    },
+    "require-dev": {
+        "behat/behat": "~3.1.0",
+        "phpspec/phpspec": "~2.0"
+    },
+    "config": {
+        "bin-dir": "bin",
+        "process-timeout": 900
+    }
+}
