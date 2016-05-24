@@ -20,21 +20,23 @@ class StartNewOrderForCatererSpec extends ObjectBehavior
     }
 
     function let(
-        Caterers $caterers,
-        Orders $orders
+        Caterers $caterers
     ) {
-        $this->beConstructedWith($orders, $caterers);
+        $this->beConstructedWith($caterers);
     }
 
     function it_adds_new_order_for_caterer_to_orders(
         Caterers $caterers,
         Caterer $caterer,
-        Orders $orders,
         Command\StartNewOrderForCaterer $command
     ) {
-        $orders->add(Argument::type(Order::class))->shouldBeCalled();
         $caterers->findCatererByName('Korova')->willReturn($caterer);
+
         $command->getCatererName()->willReturn('Korova');
+        $command->getOrderId()->willReturn('Id');
+        $command->getOrderOwner()->willReturn('Owner');
+
+        $caterer->startOrder('Id', 'Owner')->shouldBeCalled();
 
         $this->handleStartNewOrderForCaterer($command);
     }

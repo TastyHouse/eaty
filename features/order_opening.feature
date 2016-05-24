@@ -6,7 +6,7 @@ Feature: Hungry user starts the order
   Scenario: Order starting by hungry user
     Given there are following caterers:
       | name   |
-  	  | Saluto |
+      | Saluto |
       | Korova |
     When I start order for "Korova" caterer
     Then new order for "Korova" caterer should be open

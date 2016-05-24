@@ -8,10 +8,18 @@ use Prophecy\Argument;
 
 class OrderSpec extends ObjectBehavior
 {
-    function it_provider_information_about_caterer_it_is_started_for(Caterer $caterer)
+    function let()
     {
-        $this->beConstructedWith($caterer);
+        $this->beConstructedWith('orderId', 'orderOwner');
+    }
 
-        $this->getCaterer()->shouldReturn($caterer);
+    function it_provider_information_about_its_identifier()
+    {
+        $this->getId()->shouldReturn('orderId');
+    }
+
+    function it_provider_information_about_its_owner()
+    {
+        $this->getOwner()->shouldReturn('orderOwner');
     }
 }

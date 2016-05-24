@@ -3,13 +3,13 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Behat\Tester\Exception\PendingException;
 use Broadway\CommandHandling\SimpleCommandBus;
 use Eaty\Application\Caterers;
 use Eaty\Application\Command;
 use Eaty\Application\Handler;
+use Eaty\Domain\Exception\OrderNotFoundException;
+use Eaty\Domain\Order;
 use Eaty\Infrastructure\InMemory;
-use Eaty\Application\Orders;
 
 class OrderManagingContext implements Context, SnippetAcceptingContext
 {
@@ -19,31 +19,35 @@ class OrderManagingContext implements Context, SnippetAcceptingContext
     private $commandBus;
 
     /**
-     * @var string
-     **/
-    private $catererWithStartedOrderName;
-
-    /**
-     * @var Orders
-     */
-    private $orders;
-
-    /**
      * @var Caterers
      */
     private $caterers;
 
+    /**
+     * @var string
+     */
+    private $startedOrderCaterer;
+
+    /**
+     * @var string
+     */
+    private $startedOrderId;
+
+    /**
+     * @var string
+     */
+    private $starterOrderOwner;
+
     public function __construct()
     {
         $this->commandBus = new SimpleCommandBus();
-        $this->orders = new InMemory\Orders();
         $this->caterers = new InMemory\Caterers();
 
         $this->commandBus->subscribe(
             new Handler\CreateNewCaterer($this->caterers)
         );
         $this->commandBus->subscribe(
-            new Handler\StartNewOrderForCaterer($this->orders, $this->caterers)
+            new Handler\StartNewOrderForCaterer($this->caterers)
         );
     }
 
@@ -63,10 +67,14 @@ class OrderManagingContext implements Context, SnippetAcceptingContext
      */
     public function iStartOrderForCaterer($catererName)
     {
-        $command = new Command\StartNewOrderForCaterer($catererName);
+        $orderId = 'orderId';
+        $orderOwner = 'orderOwner';
+        $command = new Command\StartNewOrderForCaterer($catererName, $orderId, $orderOwner);
         $this->commandBus->dispatch($command);
 
-        $this->catererWithStartedOrderName = $catererName;
+        $this->startedOrderCaterer = $catererName;
+        $this->startedOrderId = $orderId;
+        $this->starterOrderOwner = $orderOwner;
     }
 
     /**
@@ -75,14 +83,11 @@ class OrderManagingContext implements Context, SnippetAcceptingContext
     public function newOrderForCatererShouldBeOpen($catererName)
     {
         $caterer = $this->caterers->findCatererByName($catererName);
-        $order = $this->orders->findOrderByCaterer($caterer);
 
-        if (is_null($order)) {
+        try {
+            $caterer->getOrder($this->startedOrderId);
+        } catch (OrderNotFoundException $e) {
             throw new \LogicException(sprintf('There is no started order for %s caterer.', $catererName));
-        }
-
-        if ($order->getCaterer()->getName() !== $this->catererWithStartedOrderName) {
-            throw new \LogicException(sprintf('Order should be started for %s caterer.', $catererName));
         }
     }
 
@@ -91,6 +96,12 @@ class OrderManagingContext implements Context, SnippetAcceptingContext
      */
     public function iShouldBecomeOrderKeeperOfOrder($catererName)
     {
-        throw new PendingException();
+        $caterer = $this->caterers->findCatererByName($catererName);
+
+        /** @var Order $order */
+        $order = $caterer->getOrder($this->startedOrderId);
+        if ($order->getOwner() !== $this->starterOrderOwner) {
+            throw new \LogicException(sprintf('You are not owner of the order.', $catererName));
+        }
     }
 }

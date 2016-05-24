@@ -10,27 +10,21 @@ use Eaty\Domain\Order;
 
 class StartNewOrderForCaterer extends CommandHandler
 {
-    /**
-     * @var Orders
-     */
-    private $orders;
 
     /**
      * @var Caterers
      */
     private $caterers;
 
-    public function __construct(Orders $orders, Caterers $caterers)
+    public function __construct(Caterers $caterers)
     {
-        $this->orders = $orders;
         $this->caterers = $caterers;
     }
 
     public function handleStartNewOrderForCaterer(Command\StartNewOrderForCaterer $command)
     {
         $caterer = $this->caterers->findCatererByName($command->getCatererName());
-        $order = new Order($caterer);
 
-        $this->orders->add($order);
+        $caterer->startOrder($command->getOrderId(), $command->getOrderOwner());
     }
 }
