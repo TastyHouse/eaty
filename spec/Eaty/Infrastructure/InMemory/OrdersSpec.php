@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Eaty\Application;
+namespace spec\Eaty\Infrastructure\InMemory;
 
 use Eaty\Domain\Caterer;
 use Eaty\Domain\Order;
@@ -9,7 +9,7 @@ use Prophecy\Argument;
 
 use Eaty\Application\Orders;
 
-class InMemoryOrdersSpec extends ObjectBehavior
+class OrdersSpec extends ObjectBehavior
 {
     function it_is_orders()
     {

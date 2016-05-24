@@ -1,12 +1,12 @@
 <?php
 
-namespace Eaty\Application;
+namespace Eaty\Infrastructure\InMemory;
 
-use Eaty\Application\Orders;
+use Eaty\Application\Orders as OrdersInterface;
 use Eaty\Domain\Caterer;
 use Eaty\Domain\Order;
 
-class InMemoryOrders implements Orders
+class Orders implements OrdersInterface
 {
     /**
      * @var array|Order[]

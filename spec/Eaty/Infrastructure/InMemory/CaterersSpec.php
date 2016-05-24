@@ -1,13 +1,13 @@
 <?php
 
-namespace spec\Eaty\Application;
+namespace spec\Eaty\Infrastructure\InMemory;
 
 use Eaty\Application\Caterers;
 use Eaty\Domain\Caterer;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class InMemoryCaterersSpec extends ObjectBehavior
+class CaterersSpec extends ObjectBehavior
 {
     function it_is_caterers()
     {

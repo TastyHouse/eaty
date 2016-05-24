@@ -8,10 +8,8 @@ use Broadway\CommandHandling\SimpleCommandBus;
 use Eaty\Application\Caterers;
 use Eaty\Application\Command;
 use Eaty\Application\Handler;
-use Eaty\Application\InMemoryCaterers;
+use Eaty\Infrastructure\InMemory;
 use Eaty\Application\Orders;
-use Eaty\Application\InMemoryOrders;
-
 
 class OrderManagingContext implements Context, SnippetAcceptingContext
 {
@@ -38,8 +36,8 @@ class OrderManagingContext implements Context, SnippetAcceptingContext
     public function __construct()
     {
         $this->commandBus = new SimpleCommandBus();
-        $this->orders = new InMemoryOrders();
-        $this->caterers = new InMemoryCaterers();
+        $this->orders = new InMemory\Orders();
+        $this->caterers = new InMemory\Caterers();
 
         $this->commandBus->subscribe(
             new Handler\CreateNewCaterer($this->caterers)

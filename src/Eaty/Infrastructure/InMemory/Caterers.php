@@ -1,11 +1,11 @@
 <?php
 
-namespace Eaty\Application;
+namespace Eaty\Infrastructure\InMemory;
 
-use Eaty\Application\Caterers;
+use Eaty\Application\Caterers as CaterersInterface;
 use Eaty\Domain\Caterer;
 
-class InMemoryCaterers implements Caterers
+class Caterers implements CaterersInterface
 {
     /**
      * @var array|Caterer[]
