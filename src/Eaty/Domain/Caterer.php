@@ -32,21 +32,26 @@ class Caterer
         return $this->name;
     }
 
-    public function getOrder($orderId)
+    /**
+     * @param Identifier $orderId
+     * @return Order
+     */
+    public function getOrder(Identifier $orderId)
     {
-        if (!array_key_exists($orderId, $this->orders)) {
-            throw new OrderNotFoundException(sprintf('There is no order with %s id.', $orderId));
+        if (!array_key_exists((string) $orderId, $this->orders)) {
+            throw new OrderNotFoundException(sprintf('There is no order with %s id.', (string) $orderId));
         }
 
-        return $this->orders[$orderId];
+        return $this->orders[(string) $orderId];
     }
 
     /**
-     * @param Order $order
+     * @param Identifier $orderId
+     * @param Owner $orderOwner
      */
-    public function startOrder($orderId, $orderOwner)
+    public function startOrder(Identifier $orderId, Owner $orderOwner)
     {
-        $this->orders[$orderId] = new Order(
+        $this->orders[(string) $orderId] = new Order(
             $orderId,
             $orderOwner
         );

@@ -3,7 +3,9 @@
 namespace spec\Eaty\Domain;
 
 use Eaty\Domain\Exception\OrderNotFoundException;
+use Eaty\Domain\Identifier;
 use Eaty\Domain\Order;
+use Eaty\Domain\Owner;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -16,21 +18,28 @@ class CatererSpec extends ObjectBehavior
         $this->getName()->shouldReturn('Korova');
     }
 
-    function it_allows_to_start_new_order_for_caterer()
-    {
+    function it_allows_to_start_new_order_for_caterer(
+    ) {
         $this->beConstructedWith('Korova');
+        $orderId = new Identifier('Id');
 
-        $orderId = 'Id';
-        $orderOwner = 'Owner';
+        $orderOwner = new Owner('Owner');
 
-        $this->shouldThrow(new OrderNotFoundException(sprintf('There is no order with %s id.', $orderId)))
-            ->during('getOrder', [$orderId]);
+        $this->shouldThrow(
+            new OrderNotFoundException(
+                sprintf(
+                    'There is no order with %s id.',
+                    (string) $orderId
+                )
+            )
+        )
+        ->during('getOrder', [$orderId]);
 
         $this->startOrder($orderId, $orderOwner);
 
         /** @var Order $order */
         $order = $this->getOrder($orderId);
-        $order->getId()->shouldReturn('Id');
-        $order->getOwner()->shouldReturn('Owner');
+        $order->getId()->shouldReturn($orderId);
+        $order->getOwner()->shouldReturn($orderOwner);
     }
 }

@@ -8,6 +8,7 @@ use Eaty\Application\Caterers;
 use Eaty\Application\Command;
 use Eaty\Application\Handler;
 use Eaty\Domain\Exception\OrderNotFoundException;
+use Eaty\Domain\Identifier;
 use Eaty\Domain\Order;
 use Eaty\Infrastructure\InMemory;
 
@@ -85,7 +86,7 @@ class OrderManagingContext implements Context, SnippetAcceptingContext
         $caterer = $this->caterers->findCatererByName($catererName);
 
         try {
-            $caterer->getOrder($this->startedOrderId);
+            $caterer->getOrder(new Identifier($this->startedOrderId));
         } catch (OrderNotFoundException $e) {
             throw new \LogicException(sprintf('There is no started order for %s caterer.', $catererName));
         }
@@ -99,8 +100,8 @@ class OrderManagingContext implements Context, SnippetAcceptingContext
         $caterer = $this->caterers->findCatererByName($catererName);
 
         /** @var Order $order */
-        $order = $caterer->getOrder($this->startedOrderId);
-        if ($order->getOwner() !== $this->starterOrderOwner) {
+        $order = $caterer->getOrder(new Identifier($this->startedOrderId));
+        if ((string) $order->getOwner() !== $this->starterOrderOwner) {
             throw new \LogicException(sprintf('You are not owner of the order.', $catererName));
         }
     }

@@ -5,26 +5,27 @@ namespace Eaty\Domain;
 class Order
 {
     /**
-     * @var string
+     * @var Identifier
      */
     private $id;
 
     /**
-     * @var string
+     * @var Owner
      */
     private $owner;
 
     /**
-     * Order constructor.
+     * @param Identifier $orderId
+     * @param Owner $owner
      */
-    public function __construct($orderId, $owner)
+    public function __construct(Identifier $orderId, Owner $owner)
     {
         $this->id = $orderId;
         $this->owner = $owner;
     }
 
     /**
-     * @return string
+     * @return Identifier
      */
     public function getId()
     {
@@ -32,7 +33,7 @@ class Order
     }
 
     /**
-     * @return string
+     * @return Owner
      */
     public function getOwner()
     {

@@ -6,7 +6,8 @@ use Eaty\Application\Caterers;
 use Eaty\Application\Orders;
 use Eaty\Application\Command;
 use Eaty\Domain\Caterer;
-use Eaty\Domain\Order;
+use Eaty\Domain\Identifier;
+use Eaty\Domain\Owner;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -36,7 +37,7 @@ class StartNewOrderForCatererSpec extends ObjectBehavior
         $command->getOrderId()->willReturn('Id');
         $command->getOrderOwner()->willReturn('Owner');
 
-        $caterer->startOrder('Id', 'Owner')->shouldBeCalled();
+        $caterer->startOrder(new Identifier('Id'), new Owner('Owner'))->shouldBeCalled();
 
         $this->handleStartNewOrderForCaterer($command);
     }
