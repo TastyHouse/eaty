@@ -2,5 +2,6 @@ default:
     suites:
         default:
             contexts:
+                - DishContext
                 - FeatureContext
                 - OrderManagingContext
